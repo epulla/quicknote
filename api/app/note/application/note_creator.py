@@ -1,10 +1,7 @@
-from ..domain.note import Note
-from ..domain.input_note import InputNote
-from ..domain.note_repository import NoteRepository
+from ..domain import Note, InputNote, NoteRepository
 
 
 class NoteCreator:
-
     def __init__(self, note_repository: NoteRepository) -> None:
         self.note_repository = note_repository
 

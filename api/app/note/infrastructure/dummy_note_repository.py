@@ -1,8 +1,7 @@
 import typing
 from datetime import datetime
 
-from ..domain.note import Note
-from ..domain.note_repository import NoteRepository
+from ..domain import Note, NoteRepository
 
 from anyio import sleep
 from pydantic import BaseModel
@@ -28,7 +27,7 @@ class DummyNoteRepository(NoteRepository, BaseModel):
     async def soft_delete_note(self, id: str):
         print(f'Soft deleting note with id: {id}')
         await sleep(0.5)
-        selected_note = self.db[id] 
+        selected_note = self.db[id]
         selected_note.content = ""
         selected_note.deleted = datetime.now()
         print(f'Note content was removed at {selected_note.deleted}')

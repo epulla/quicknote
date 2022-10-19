@@ -1,8 +1,5 @@
-import typing
-
-from .note.domain.input_note import InputNote
-from .note.infrastructure.note_controller import NoteController
-from .note.infrastructure.dummy_note_repository import DummyNoteRepository
+from .note.domain import InputNote
+from .note.infrastructure import NoteController, DummyNoteRepository
 
 from fastapi import FastAPI
 
@@ -18,11 +15,13 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.post("/generate_note")
-async def generate_note(note: InputNote):
-    return await note_controller.create_note_and_get_id(note)
+@app.post("/create_note")
+async def create_note(note: InputNote):
+    created_note = await note_controller.create_note(note)
+    return {'id': created_note.id}
 
 
 @app.get("/note/{note_id}")
-async def read_note(note_id: str):
-    return await note_controller.read_note(note_id)
+async def read_note_and_destroy(note_id: str):
+    read_note = await note_controller.read_note_and_destroy(note_id)
+    return read_note
