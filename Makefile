@@ -1,14 +1,22 @@
+BACKEND=api
+FRONTEND=frontend
+
 
 # General Commands Wrappers
 
-start_api:
-	cd api; \
+start_backend:
+	cd $(BACKEND); \
 	$(MAKE) start
 
-start_ui:
-	cd frontend; \
+start_frontend:
+	cd $(FRONTEND); \
 	$(MAKE) start
 
+install:
+	cd api ; \
+	$(MAKE) install ; \
+	cd ../frontend ; \
+	$(MAKE) install
 
 # Postgres DB Commands Wrappers
 
