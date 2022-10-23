@@ -1,2 +1,3 @@
 from .dummy_note_repository import DummyNoteRepository
+from .redis_note_repository import RedisNoteRepository
 from .note_controller import NoteController

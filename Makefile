@@ -18,10 +18,7 @@ install:
 	cd ../frontend ; \
 	$(MAKE) install
 
-# Postgres DB Commands Wrappers
+# Redis Commands Wrapper
 
-restart_postgres:
-	docker-compose up --build
-
-restart_and_clean_postgres:
-	rm -rf ./postgres-data && $(MAKE) restart_postgres
+start_redis:
+	docker-compose -f dev.docker-compose.yaml up

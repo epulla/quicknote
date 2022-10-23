@@ -2,6 +2,7 @@ import typing
 from datetime import datetime
 
 from ..domain import Note, NoteRepository
+from ..domain.exceptions import NoteNotFound
 
 from anyio import sleep
 from pydantic import BaseModel
@@ -20,9 +21,11 @@ class DummyNoteRepository(NoteRepository, BaseModel):
     async def get_note_by_id(self, id: str) -> Note:
         print(f"Getting note with id: {id}")
         await sleep(0.5)
-        selected_note = self.db[id]
-        response = Note(**selected_note.__dict__)
-        return response
+        try:
+            selected_note = self.db[id]
+        except KeyError:
+            raise NoteNotFound
+        return Note(**selected_note.__dict__)
 
     async def soft_delete_note(self, id: str):
         print(f'Soft deleting note with id: {id}')

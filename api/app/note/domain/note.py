@@ -12,6 +12,10 @@ class Note(BaseModel):
     created: datetime = datetime.now()
     deleted: datetime = None
 
+    @property
+    def was_deleted(self):
+        return not self.deleted is None
+
     @classmethod
     def get_note_by_input_note(cls, input_note: InputNote):
         return Note(content=input_note.content)
