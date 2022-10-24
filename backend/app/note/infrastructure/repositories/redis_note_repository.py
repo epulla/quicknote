@@ -3,12 +3,15 @@ from datetime import datetime
 
 from ...domain import NoteRepository, Note
 from ...domain.exceptions import NoteNotFound
+from ....shared.domain.exceptions import DBConnectionError
 
 import redis.asyncio as async_redis
+import redis
 
 
 class RedisNoteRepository(NoteRepository):
-    def __init__(self) -> None:
+    def __init__(self):
+        super().__init__("redis")
         self.conn = async_redis.Redis()
 
     async def create_note(self, note: Note, expiration_time: int):
@@ -33,3 +36,9 @@ class RedisNoteRepository(NoteRepository):
         selected_note.deleted = datetime.now()
         # 'keepttl' flag helps to keep the expiration time set in 'self.create_note' function
         await self.conn.set(selected_note.id, json.dumps(selected_note.__dict__, default=str), keepttl=True)
+
+    async def check_connection(self):
+        try:
+            await self.conn.ping()
+        except redis.exceptions.ConnectionError:
+            raise DBConnectionError('redis')

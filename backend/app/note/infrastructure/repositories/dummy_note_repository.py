@@ -12,12 +12,15 @@ from pydantic import BaseModel
 DUMMY_DELAY = 0.5  # Time delay of each response from the dummy repository
 
 
-class DummyNoteRepository(NoteRepository, BaseModel):
-    db: typing.Dict = {}
+class DummyNoteRepository(NoteRepository):
+    def __init__(self):
+        super().__init__("python-dictionary")
+        self.db: typing.Dict = {}
 
     async def create_note(self, note: Note, expiration_time: int):
         # Create async worker threads (one for creating and another for deleting a Note)
-        workers = [self._create_note(note), self._hard_delete_note(note.id, expiration_time)]
+        workers = [self._create_note(note), self._hard_delete_note(
+            note.id, expiration_time)]
         asyncio.gather(*workers)
 
     async def _create_note(self, note: Note):
@@ -50,3 +53,6 @@ class DummyNoteRepository(NoteRepository, BaseModel):
         selected_note.content = ""
         selected_note.deleted = datetime.now()
         print(f'Note content was removed at {selected_note.deleted}')
+
+    async def check_connection(self):
+        pass
