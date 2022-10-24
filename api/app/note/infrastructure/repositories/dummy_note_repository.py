@@ -1,22 +1,38 @@
+import asyncio
 import typing
+import time
 from datetime import datetime
 
-from ..domain import Note, NoteRepository
-from ..domain.exceptions import NoteNotFound
+from ...domain import Note, NoteRepository
+from ...domain.exceptions import NoteNotFound
 
 from anyio import sleep
 from pydantic import BaseModel
+
+DUMMY_DELAY = 0.5  # Time delay of each response from the dummy repository
 
 
 class DummyNoteRepository(NoteRepository, BaseModel):
     db: typing.Dict = {}
 
-    async def create_note(self, note: Note):
+    async def create_note(self, note: Note, expiration_time: int):
+        # Create async worker threads (one for creating and another for deleting a Note)
+        workers = [self._create_note(note), self._hard_delete_note(note.id, expiration_time)]
+        asyncio.gather(*workers)
+
+    async def _create_note(self, note: Note):
         print(f"Saving note")
         await sleep(0.5)
         self.db[note.id] = note
         print(f"Note saved")
-        print(self.db)
+
+    async def _hard_delete_note(self, id: str, expiration_time: int):
+        try:
+            await sleep(expiration_time)
+            print(f'Hard deleting of Note with id {id}')
+            self.db.pop(id)
+        except KeyError:
+            raise NoteNotFound
 
     async def get_note_by_id(self, id: str) -> Note:
         print(f"Getting note with id: {id}")
@@ -34,6 +50,3 @@ class DummyNoteRepository(NoteRepository, BaseModel):
         selected_note.content = ""
         selected_note.deleted = datetime.now()
         print(f'Note content was removed at {selected_note.deleted}')
-
-    async def hard_delete_note(self, id: str):
-        return await super().hard_delete_note(id)
