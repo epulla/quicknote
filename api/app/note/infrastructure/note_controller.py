@@ -6,9 +6,9 @@ class NoteController:
     def __init__(self, note_repository: NoteRepository) -> None:
         self.note_repository = note_repository
 
-    async def create_note(self, note: InputNote) -> Note:
+    async def create_note(self, input_note: InputNote) -> Note:
         note_creator = NoteCreator(self.note_repository)
-        return await note_creator.create_note(note)
+        return await note_creator.create_note(input_note)
 
     async def read_note_and_destroy(self, id: str) -> Note:
         note_reader = NoteReader(self.note_repository)

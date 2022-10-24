@@ -1,8 +1,8 @@
 import json
 from datetime import datetime
 
-from ..domain import NoteRepository, Note
-from ..domain.exceptions import NoteNotFound
+from ...domain import NoteRepository, Note
+from ...domain.exceptions import NoteNotFound
 
 import redis.asyncio as redis
 
@@ -11,14 +11,15 @@ class RedisNoteRepository(NoteRepository):
     def __init__(self) -> None:
         self.conn = redis.Redis()
 
-    async def create_note(self, note: Note):
+    async def create_note(self, note: Note, expiration_time: int):
         print("Saving note")
-        await self.conn.set(note.id, json.dumps(note.__dict__, default=str))
+        await self.conn.set(note.id, json.dumps(note.__dict__, default=str), ex=expiration_time)
         print("Note saved")
 
     async def get_note_by_id(self, id: str) -> Note:
         print(f"Getting note with id: {id}")
         response = await self.conn.get(id)
+        print(response)
         if response is None:
             raise NoteNotFound
         return Note(**json.loads(response))
@@ -30,7 +31,5 @@ class RedisNoteRepository(NoteRepository):
             return
         selected_note.content = ""
         selected_note.deleted = datetime.now()
-        await self.conn.set(selected_note.id, json.dumps(selected_note.__dict__, default=str))
-
-    async def hard_delete_note(self, id: str):
-        return await super().hard_delete_note(id)
+        # 'keepttl' flag helps to keep the expiration time set in 'self.create_note' function
+        await self.conn.set(selected_note.id, json.dumps(selected_note.__dict__, default=str), keepttl=True)
