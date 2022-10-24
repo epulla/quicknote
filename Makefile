@@ -1,4 +1,4 @@
-BACKEND=api
+BACKEND=backend
 FRONTEND=frontend
 
 
