@@ -4,12 +4,12 @@ from datetime import datetime
 from ...domain import NoteRepository, Note
 from ...domain.exceptions import NoteNotFound
 
-import redis.asyncio as redis
+import redis.asyncio as async_redis
 
 
 class RedisNoteRepository(NoteRepository):
     def __init__(self) -> None:
-        self.conn = redis.Redis()
+        self.conn = async_redis.Redis()
 
     async def create_note(self, note: Note, expiration_time: int):
         print("Saving note")
