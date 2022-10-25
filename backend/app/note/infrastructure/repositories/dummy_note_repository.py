@@ -28,6 +28,7 @@ class DummyNoteRepository(NoteRepository):
         await sleep(0.5)
         self.db[note.id] = note
         print(f"Note saved")
+        print(f"db: {self.db}")
 
     async def _hard_delete_note(self, id: str, expiration_time: int):
         try:
