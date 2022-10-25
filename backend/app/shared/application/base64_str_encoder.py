@@ -2,7 +2,7 @@ from base64 import b64encode, b64decode
 
 from ..domain import StrEncoder
 
-STR_ENCODE = 'ascii'
+STR_ENCODE = 'utf-8'
 
 
 class Base64StrEncoder(StrEncoder):
