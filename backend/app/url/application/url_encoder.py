@@ -1,6 +1,8 @@
 import typing
-from ..domain import StrEncoder
-from ..domain.exceptions import UrlWithMoreParamsAsExpected
+
+from ...shared.domain import StrEncoder
+from ...shared.domain.exceptions import UrlWithMoreParamsAsExpected
+
 
 class UrlEncoder:
     def __init__(self, str_encoder: StrEncoder):
