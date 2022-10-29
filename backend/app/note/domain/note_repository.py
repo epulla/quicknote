@@ -18,6 +18,11 @@ class NoteRepository(ABC):
         pass
 
     @abstractmethod
+    async def update_note_by_id(self, id: str, note: Note):
+        """This method will update a note by its id"""
+        pass
+
+    @abstractmethod
     async def soft_delete_note(self, id: str):
         """This method will remove the content of a Note and update its deleted date and state as inactive"""
         pass

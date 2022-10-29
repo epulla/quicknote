@@ -27,15 +27,22 @@ class RedisNoteRepository(NoteRepository):
             raise NoteNotFound
         return Note(**json.loads(response))
 
+    async def update_note_by_id(self, id: str, note: Note):
+        print(f"Updating note with id: {id}")
+        await self.get_note_by_id(id)
+        await self._update_note_keeping_its_expiration_time(id, note)
+
     async def soft_delete_note(self, id: str):
         print(f"Soft deleting note with id: {id}")
         selected_note = await self.get_note_by_id(id)
-        if selected_note.was_deleted:
-            return
         selected_note.content = ""
         selected_note.deleted = datetime.now()
+        selected_note.current_view = selected_note.max_views
+        await self._update_note_keeping_its_expiration_time(selected_note.id, selected_note)
+
+    async def _update_note_keeping_its_expiration_time(self, id: str, note: Note):
         # 'keepttl' flag helps to keep the expiration time set in 'self.create_note' function
-        await self.conn.set(selected_note.id, json.dumps(selected_note.__dict__, default=str), keepttl=True)
+        await self.conn.set(id, json.dumps(note.__dict__, default=str), keepttl=True)
 
     async def check_connection(self):
         try:

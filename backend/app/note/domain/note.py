@@ -9,6 +9,8 @@ from pydantic import BaseModel
 class Note(BaseModel):
     id: str = str(uuid4())
     content: str
+    max_views: int
+    current_view: int = 0
     created: datetime = datetime.now()
     deleted: datetime = None
 
@@ -16,6 +18,10 @@ class Note(BaseModel):
     def was_deleted(self):
         return not self.deleted is None
 
+    @property
+    def has_available_views(self):
+        return self.current_view < self.max_views
+
     @classmethod
     def get_note_by_input_note(cls, input_note: InputNote):
-        return Note(content=input_note.content)
+        return Note(**input_note.__dict__)
