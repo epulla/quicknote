@@ -47,12 +47,20 @@ class DummyNoteRepository(NoteRepository):
             raise NoteNotFound
         return Note(**selected_note.__dict__)
 
+    async def update_note_by_id(self, id: str, note: Note):
+        print(f"Updating note with id: {id}")
+        await self.get_note_by_id(id)
+        print(self.db)
+        print(note)
+        self.db[id] = Note(**note.__dict__)
+
     async def soft_delete_note(self, id: str):
         print(f'Soft deleting note with id: {id}')
         await sleep(0.5)
         selected_note = self.db[id]
         selected_note.content = ""
         selected_note.deleted = datetime.now()
+        selected_note.current_view = selected_note.max_views
         print(f'Note content was removed at {selected_note.deleted}')
 
     async def check_connection(self):
