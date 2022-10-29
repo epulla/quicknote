@@ -27,11 +27,13 @@ note_controller = NoteController(
 )
 str_encoder = Base64StrEncoder()
 url_encoder = UrlEncoder(str_encoder=str_encoder)
-url_shorter_controller = UrlShorterController(url_repository=RedisUrlRepository() ,str_encoder=str_encoder)
+url_shorter_controller = UrlShorterController(
+    url_repository=RedisUrlRepository(), str_encoder=str_encoder)
 
 
 # Constants
 URL_SEPARATOR = "&&&"
+USE_URL_SHORTER = True 
 
 
 # Middlewares
@@ -56,14 +58,21 @@ async def create_note(input_note: InputNote):
     encoded_url = url_encoder.encode_many_to_url(
         [key, tag, nonce, created_note.id], separator=URL_SEPARATOR
     )
-    shorted_url = await url_shorter_controller.create_short_url(InputUrl(original_url=encoded_url, expires_in=input_note.expires_in))
-    return {"url": shorted_url}
+    if USE_URL_SHORTER:
+        shorted_url = await url_shorter_controller.create_short_url(InputUrl(original_url=encoded_url, expires_in=input_note.expires_in))
+        return {"url": shorted_url}
+    else:
+        return {"url": encoded_url}
 
 
-@app.get("/api/note/{shorted_url}")
-async def read_note_and_destroy(shorted_url: str):
+@app.get("/api/note/{url}")
+async def read_note_and_destroy(url: str):
     try:
-        encoded_url = await url_shorter_controller.get_original_url(shorted_url)
+        if USE_URL_SHORTER:
+            encoded_url = await url_shorter_controller.get_original_url(url)
+        else:
+            encoded_url = url
+
         key, tag, nonce, id = url_encoder.decode_many_to_url(
             encoded_url, separator=URL_SEPARATOR, limit=4
         )
