@@ -13,8 +13,10 @@ class NoteEncrypter:
         key, tag, nonce, encrypted_content = self.encrypter.encrypt(
             input_note.content
         )
-        return key, tag, nonce, InputNote(content=encrypted_content, expires_in=input_note.expires_in)
+        input_note.content = encrypted_content
+        return key, tag, nonce, InputNote(**input_note.__dict__)
 
     def decrypt_note(self, key: str, tag: str, nonce: str, note: Note) -> Note:
         decrypted_content = self.encrypter.decrypt(key, tag, nonce, note.content)
-        return Note(id=note.id, content=decrypted_content, created=note.created, deleted=note.deleted)
+        note.content = decrypted_content
+        return Note(**note.__dict__)
