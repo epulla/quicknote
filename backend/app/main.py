@@ -16,6 +16,8 @@ from .shared.domain import ExceptionResponse
 from .shared.domain.exceptions import DBConnectionError
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 
 app = FastAPI()
@@ -37,6 +39,16 @@ USE_URL_SHORTER = True
 
 
 # Middlewares
+origins = ["*", "http://localhost"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.middleware('http')
 async def connection_checker(request: Request, call_next):
     try:
