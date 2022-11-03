@@ -13,4 +13,4 @@ class Url(BaseModel):
 
     @classmethod
     def get_url_by_input_url(cls, input_url: InputUrl):
-        return Url(original_url=input_url.original_url, deleted=input_url.deleted)
+        return Url(id=str(uuid4()), **input_url.__dict__)

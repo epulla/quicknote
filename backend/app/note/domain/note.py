@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 
 class Note(BaseModel):
-    id: str = str(uuid4())
+    id: str
     content: str
     max_views: int
     current_view: int = 0
@@ -24,4 +24,4 @@ class Note(BaseModel):
 
     @classmethod
     def get_note_by_input_note(cls, input_note: InputNote):
-        return Note(**input_note.__dict__)
+        return Note(id=str(uuid4()), **input_note.__dict__)
