@@ -67,7 +67,6 @@ const CreateNoteView = () => {
     });
     setLoading(false);
     setOpenSnackbar(true);
-    console.log(response);
     setResponse(actualResponse);
   };
 

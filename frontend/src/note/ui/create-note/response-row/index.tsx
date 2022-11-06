@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { GetNoteInput } from "../../../domain/note.input";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { getUrlByRespone } from "../../../application/geturl.app";
 
 type ResponseRowProps = {
@@ -50,17 +49,6 @@ const ResponseRow = ({ response }: ResponseRowProps) => {
                       }}
                     >
                       <ContentCopyIcon />
-                    </IconButton>
-                  </Tooltip>
-                </InputAdornment>
-                <InputAdornment position="end">
-                  <Tooltip title="Go to link" arrow>
-                    <IconButton
-                      onClick={() => {
-                        window.open(getUrlByRespone(response));
-                      }}
-                    >
-                      <ExitToAppIcon />
                     </IconButton>
                   </Tooltip>
                 </InputAdornment>
