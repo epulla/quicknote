@@ -1,3 +1,4 @@
+import { parseDateToUTC } from "../../shared/application/parse-time";
 import ApiResponse from "../../shared/domain/api.response";
 import Api from "../../shared/infrastructure/Api";
 import Note from "../domain/note";
@@ -33,9 +34,9 @@ export default class ApiNoteRepository implements NoteRepository {
         ...response?.data,
         maxViews: response?.data.max_views,
         currentView: response?.data.current_view,
-        created: new Date(response?.data.created),
+        created: parseDateToUTC(new Date(response?.data.created)),
         deleted: response?.data.deleted
-          ? new Date(response?.data.deleted)
+          ? parseDateToUTC(new Date(response?.data.deleted))
           : undefined,
       } as Note;
       return {

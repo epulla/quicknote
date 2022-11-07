@@ -1,6 +1,5 @@
 import {
   Grid,
-  Paper,
   TextareaAutosize,
   Typography,
   useTheme,
@@ -9,6 +8,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import ApiResponse from "../../../../shared/domain/api.response";
 import MessageRow from "../../../../shared/ui/message-row";
 import Note from "../../../domain/note";
+import { getTimeDifference } from "../../../../shared/application/parse-time";
 
 type ResponseRowProps = {
   response: ApiResponse<Note | undefined> | undefined;
@@ -48,6 +48,10 @@ const ResponseRow = ({ response }: ResponseRowProps) => {
               response.entity.maxViews - response.entity.currentView
             } more time(s) to view this note`}
           />
+          {response.entity.deleted && <MessageRow
+            variant="h6"
+            message={`This note was deleted ${getTimeDifference(new Date(), response.entity.deleted).mins} minutes ago`}
+          />}
         </>
       ) : (
         <>

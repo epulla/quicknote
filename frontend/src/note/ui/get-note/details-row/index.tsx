@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import ApiResponse from "../../../../shared/domain/api.response";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MessageRow from "../../../../shared/ui/message-row";
 import Note from "../../../domain/note";
 
 type DetailsRowProps = {
