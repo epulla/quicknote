@@ -1,9 +1,4 @@
-import {
-  Grid,
-  TextareaAutosize,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Grid, TextareaAutosize, Typography, useTheme } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import ApiResponse from "../../../../shared/domain/api.response";
 import MessageRow from "../../../../shared/ui/message-row";
@@ -29,12 +24,8 @@ const ResponseRow = ({ response }: ResponseRowProps) => {
           <TextareaAutosize
             readOnly
             minRows={7}
-            placeholder="..."
-            value={
-              response.entity.content !== ""
-                ? response.entity.content
-                : "****Sorry, this note was already deleted****"
-            }
+            placeholder="Sorry, this note was already deleted"
+            value={response.entity.content}
             style={{
               fontSize: "1.5rem",
               backgroundColor:
@@ -48,10 +39,14 @@ const ResponseRow = ({ response }: ResponseRowProps) => {
               response.entity.maxViews - response.entity.currentView
             } more time(s) to view this note`}
           />
-          {response.entity.deleted && <MessageRow
-            variant="h6"
-            message={`This note was deleted ${getTimeDifference(new Date(), response.entity.deleted).mins} minutes ago`}
-          />}
+          {response.entity.deleted && (
+            <MessageRow
+              variant="h6"
+              message={`This note was deleted ${
+                getTimeDifference(new Date(), response.entity.deleted).mins
+              } minutes ago`}
+            />
+          )}
         </>
       ) : (
         <>

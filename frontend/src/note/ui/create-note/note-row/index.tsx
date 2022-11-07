@@ -32,7 +32,7 @@ const NoteRow = ({
       </Grid>
       <Grid item xs={8} textAlign="end">
         <LoadingButton
-          variant="outlined"
+          variant={theme.palette.mode === "dark" ? "outlined" : "contained"}
           color="primary"
           loading={loading}
           loadingIndicator="Creating..."
