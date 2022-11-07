@@ -11,15 +11,21 @@ import {
 import { GetNoteInput } from "../../../domain/note.input";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { getUrlByRespone } from "../../../application/geturl.app";
+import ApiResponse from "../../../../shared/domain/api.response";
 
 type ResponseRowProps = {
-  response: GetNoteInput | undefined;
+  response: ApiResponse<GetNoteInput | undefined> | undefined;
 };
 
 const ResponseRow = ({ response }: ResponseRowProps) => {
   const [copyTooltipTitle, setCopyTooltipTitle] = useState<"Copy" | "Copied!">(
     "Copy"
   );
+
+  if (!response) {
+    return null;
+  }
+
   return (
     <Grid
       container
@@ -34,7 +40,7 @@ const ResponseRow = ({ response }: ResponseRowProps) => {
         <Grid item p={3}>
           <OutlinedInput
             fullWidth
-            value={getUrlByRespone(response)}
+            value={getUrlByRespone(response.entity)}
             readOnly={true}
             endAdornment={
               <>
@@ -44,7 +50,7 @@ const ResponseRow = ({ response }: ResponseRowProps) => {
                       onClick={() => {
                         setCopyTooltipTitle("Copied!");
                         navigator.clipboard.writeText(
-                          getUrlByRespone(response)
+                          getUrlByRespone(response.entity)
                         );
                       }}
                     >

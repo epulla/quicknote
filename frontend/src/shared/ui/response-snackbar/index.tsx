@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import { GetNoteInput } from "../../../note/domain/note.input";
+import ApiResponse from "../../domain/api.response";
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -10,19 +10,20 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-type SimpleSnackbarProps = {
-  response: GetNoteInput | undefined;
+type ResponseSnackbarProps = {
+  response: ApiResponse<any> | undefined;
   openSnackbar: boolean;
   setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
   duration: number;
 };
 
-const SimpleSnackbar = ({
+const ResponseSnackbar= ({
   response,
   openSnackbar,
   setOpenSnackbar,
   duration,
-}: SimpleSnackbarProps) => {
+}: ResponseSnackbarProps) => {
+  
   const handleClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -30,9 +31,12 @@ const SimpleSnackbar = ({
     if (reason === "clickaway") {
       return;
     }
-
     setOpenSnackbar(false);
   };
+
+  if (!response) {
+    return null;
+  }
 
   return (
     <Snackbar
@@ -40,17 +44,11 @@ const SimpleSnackbar = ({
       autoHideDuration={duration}
       onClose={handleClose}
     >
-      {response ? (
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Your message has been created!
+        <Alert onClose={handleClose} severity={response.status === 200 ? "success" : "error"} sx={{ width: "100%" }}>
+          {response.message}
         </Alert>
-      ) : (
-        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-          Oops! Something happened :(
-        </Alert>
-      )}
     </Snackbar>
   );
 };
 
-export default SimpleSnackbar;
+export default ResponseSnackbar;

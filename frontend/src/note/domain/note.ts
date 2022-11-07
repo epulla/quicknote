@@ -4,5 +4,5 @@ export default interface Note {
   maxViews: number;
   currentView: number;
   created: Date;
-  deleted: Date;
+  deleted?: Date;
 }
