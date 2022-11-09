@@ -10,9 +10,9 @@ import redis
 
 
 class RedisUrlRepository(UrlRepository):
-    def __init__(self):
+    def __init__(self, host: str, port: int):
         super().__init__("redis")
-        self.conn = async_redis.Redis()
+        self.conn = async_redis.Redis(host=host, port=port)
 
     async def save_url(self, url: Url, expiration_time: int):
         print("Saving URL")
