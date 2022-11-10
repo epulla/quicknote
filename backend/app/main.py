@@ -19,23 +19,29 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from .config import get_settings
+
 
 app = FastAPI()
+settings = get_settings()
 
 
+# Constants
+REDIS_HOST = settings.redis_host # Default: "localhost"
+REDIS_PORT = settings.redis_port # Default: 6379
+URL_SEPARATOR = settings.url_separator # Default: "&&&"
+USE_URL_SHORTER = settings.use_url_shorter # Default: True
+
+
+# App Set Up
 note_controller = NoteController(
-    note_repository=RedisNoteRepository(),
+    note_repository=RedisNoteRepository(host=REDIS_HOST, port=REDIS_PORT),
     note_encrypter=NoteEncrypter(encrypter=AESEncrypter())
 )
 str_encoder = Base64StrEncoder()
 url_encoder = UrlEncoder(str_encoder=str_encoder)
 url_shorter_controller = UrlShorterController(
-    url_repository=RedisUrlRepository(), str_encoder=str_encoder)
-
-
-# Constants
-URL_SEPARATOR = "&&&"
-USE_URL_SHORTER = True 
+    url_repository=RedisUrlRepository(host=REDIS_HOST, port=REDIS_PORT), str_encoder=str_encoder)
 
 
 # Middlewares
@@ -49,13 +55,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.middleware('http')
 async def connection_checker(request: Request, call_next):
     try:
         await note_controller.note_repository.check_connection()
         return await call_next(request)
     except DBConnectionError as e:
-        return ExceptionResponse(exception=e, status_code=500)
+        return ExceptionResponse(exception=e, status_code=500, return_traceback=True)
 
 
 # Routers
