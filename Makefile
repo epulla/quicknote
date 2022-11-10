@@ -21,4 +21,4 @@ install:
 # Redis Commands Wrapper
 
 start_redis:
-	docker-compose -f dev.docker-compose.yaml up
+	docker-compose -f redis.docker-compose.yaml up
