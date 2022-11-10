@@ -27,7 +27,7 @@ settings = get_settings()
 
 
 # Constants
-REDIS_HOST = settings.redis_host # Default: "redis"
+REDIS_HOST = settings.redis_host # Default: "localhost"
 REDIS_PORT = settings.redis_port # Default: 6379
 URL_SEPARATOR = settings.url_separator # Default: "&&&"
 USE_URL_SHORTER = settings.use_url_shorter # Default: True
@@ -62,7 +62,7 @@ async def connection_checker(request: Request, call_next):
         await note_controller.note_repository.check_connection()
         return await call_next(request)
     except DBConnectionError as e:
-        return ExceptionResponse(exception=e, status_code=500)
+        return ExceptionResponse(exception=e, status_code=500, return_traceback=True)
 
 
 # Routers
