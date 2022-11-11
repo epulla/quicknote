@@ -5,8 +5,7 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    redis_host: str = os.getenv("REDIS_HOST", "localhost")
-    redis_port: int = os.getenv("REDIS_PORT", 6379)
+    redis_url: str = os.getenv("REDIS_URL", "redis://localhost:6379")
     url_separator: str = os.getenv("URL_SEPARATOR", "&&&")
     use_url_shorter: bool = (os.getenv("USE_URL_SHORTER", "True") == "True")
 

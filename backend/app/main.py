@@ -17,7 +17,6 @@ from .shared.domain.exceptions import DBConnectionError
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 
 from .config import get_settings
 
@@ -27,25 +26,24 @@ settings = get_settings()
 
 
 # Constants
-REDIS_HOST = settings.redis_host # Default: "localhost"
-REDIS_PORT = settings.redis_port # Default: 6379
+REDIS_URL = settings.redis_url # Default: "redis://localhost:6379"
 URL_SEPARATOR = settings.url_separator # Default: "&&&"
 USE_URL_SHORTER = settings.use_url_shorter # Default: True
 
 
 # App Set Up
 note_controller = NoteController(
-    note_repository=RedisNoteRepository(host=REDIS_HOST, port=REDIS_PORT),
+    note_repository=RedisNoteRepository(url=REDIS_URL),
     note_encrypter=NoteEncrypter(encrypter=AESEncrypter())
 )
 str_encoder = Base64StrEncoder()
 url_encoder = UrlEncoder(str_encoder=str_encoder)
 url_shorter_controller = UrlShorterController(
-    url_repository=RedisUrlRepository(host=REDIS_HOST, port=REDIS_PORT), str_encoder=str_encoder)
+    url_repository=RedisUrlRepository(url=REDIS_URL), str_encoder=str_encoder)
 
 
 # Middlewares
-origins = ["*", "http://localhost"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
