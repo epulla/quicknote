@@ -18,12 +18,18 @@ install:
 	cd ../frontend ; \
 	$(MAKE) install
 
-# Dockerizing the app
+# Dockerizing the app with docker-compose
+
+build_frontend_nginx_conf:
+	cd frontend; \
+	$(MAKE) build_nginx_conf
 
 compose_build:
+	$(MAKE) build_frontend_nginx_conf
 	docker-compose build
 
 compose_up_build:
+	$(MAKE) build_frontend_nginx_conf
 	docker-compose up --build
 
 # Redis Commands Wrapper
