@@ -7,9 +7,9 @@ Have you ever shared a secret (such as a token or password) with a colleague? Ha
 
 It is common to see cases where passwords or credentials are shared through insecure channels that are easy to hack 😵 There are ways to create secure channels but they are not very intuitive for non-developers 🤕
 
-# What is Quicknote?
-
 This is what Quicknote was created for! A secure channel where you can share your secrets quickly, easily and safely.
+
+# What is Quicknote?
 
 Based on [Privnote](https://privnote.com/), Quicknote is a open source app that helps to create and share volatile messages which only text is allowed. This app is perfect to quickly share passwords, private tokens, private credentials and gossip :).
 
