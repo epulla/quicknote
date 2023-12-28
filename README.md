@@ -11,7 +11,7 @@ This is what Quicknote was created for! A secure channel where you can share you
 
 # What is Quicknote?
 
-Based on [Privnote](https://privnote.com/), Quicknote is a open source app that helps to create and share volatile messages which only text is allowed. This app is perfect to quickly share passwords, private tokens, private credentials and gossip :).
+Based on [Privnote](https://privnote.com/), Quicknote is an open-source app that helps to create and share volatile messages which only text is allowed. This app is perfect to quickly share passwords, private tokens, private credentials and gossip :)
 
 # Tech Stack
 
